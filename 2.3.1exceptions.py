@@ -1,8 +1,11 @@
-polka = input('Введите польскую нотацию:')
+polka = input('Введите польскую нотацию: ')
 polka = polka.split(' ')
 
 
 def poland_annotation():
+    # Если не определить переменную, то предупреждает:
+    # Local variable 'polka_result' might be referenced before assignment
+    polka_result = 0
     if operation == '+':
         polka_result = first + second
     elif operation == '-':
@@ -10,28 +13,30 @@ def poland_annotation():
     elif operation == '*':
         polka_result = first * second
     elif operation == '/':
-        try:
-            polka_result = first / second
-        # except (ZeroDivisionError, TypeError) as e:
-        except Exception as e:
-            polka_result = 'На ноль делить нельзя - ' + str(e)
-    print(f'Результат: {polka_result}')
+        polka_result = first / second
+    return polka_result
 
 
 try:
-    operation, first, second = polka
-except (Exception, TypeError) as e:
-    print('Передано меньше 3х аргументов')
+    # проверка на количество введенных аргументов
+    operation = polka[0]
+    first = polka[1]
+    second = polka[2]
+
+    # проверка на допустимую операцию
+    assert operation == '+' or operation == '-' or operation == '*' or operation == '/', "Операция недоступна"
+
+    # проверка на то, что операнд - число
+    first = int(first)
+    second = int(second)
+except (AssertionError, TypeError) as e:
+    print(e)
+except (IndexError, TypeError) as e:
+    print('Передано меньше 3х аргументов', e)
+except (ValueError, TypeError) as e:
+    print('Операнды должны быть числом')
 else:
     try:
-        first = int(first)
-        second = int(second)
-    except (Exception, TypeError) as e:
-        print('Операнды должны быть числом')
-    else:
-        try:
-            assert operation == '+' or operation == '-' or operation == '*' or operation == '/', "Операция недоступна"
-        except Exception as e:
-            print(e)
-        else:
-            poland_annotation()
+        print(poland_annotation())
+    except (ZeroDivisionError, TypeError) as e:
+        print('На ноль делить нельзя', e)
